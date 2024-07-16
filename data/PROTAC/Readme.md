@@ -1,0 +1,1 @@
+p1 is E3 ligase, and p2 is POI

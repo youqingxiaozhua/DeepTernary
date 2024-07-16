@@ -1,0 +1,588 @@
+[
+  {
+    "representative": [
+      "4DRH_A_B_RAP",
+      "4DRI_A_B_RAP"
+    ],
+    "items": [
+      "1FAP_A_B_RAP",
+      "1NSG_A_B_RAD",
+      "2FAP_A_B_RAD",
+      "3FAP_A_B_ARD",
+      "4DRH_A_B_RAP",
+      "4DRH_B_D_RAP",
+      "4DRH_D_E_RAP",
+      "4DRI_A_B_RAP",
+      "4FAP_A_B_ARD",
+      "6M4U_A_B_RAP",
+      "6M4U_A_F_RAP",
+      "6M4U_B_E_RAP",
+      "6M4U_E_F_RAP",
+      "8ER6_A_B_XYU",
+      "8ER6_C_D_XYU",
+      "8ER6_E_F_XYU"
+    ]
+  },
+  {
+    "representative": [
+      "1KKQ_A_E_471"
+    ],
+    "items": [
+      "1KKQ_A_E_471"
+    ]
+  },
+  {
+    "representative": [
+      "1R8Q_B_F_AFB"
+    ],
+    "items": [
+      "1R8Q_A_E_AFB",
+      "1R8Q_B_F_AFB",
+      "1S9D_A_E_AFB"
+    ]
+  },
+  {
+    "representative": [
+      "1RE0_A_B_AFB"
+    ],
+    "items": [
+      "1RE0_A_B_AFB"
+    ]
+  },
+  {
+    "representative": [
+      "6TZ8_D_F_FK5"
+    ],
+    "items": [
+      "1TCO_C_A_FK5",
+      "6TZ7_A_C_FK5",
+      "6TZ8_A_C_FK5",
+      "6TZ8_D_F_FK5"
+    ]
+  },
+  {
+    "representative": [
+      "2O98_A_P_FSC"
+    ],
+    "items": [
+      "2O98_A_P_FSC",
+      "3M50_A_P_EBT",
+      "3M51_A_P_YR1"
+    ]
+  },
+  {
+    "representative": [
+      "2OVM_A_B_AS0"
+    ],
+    "items": [
+      "2OVM_A_B_AS0"
+    ]
+  },
+  {
+    "representative": [
+      "2P1O_B_C_NLA"
+    ],
+    "items": [
+      "2P1N_B_C_CFA",
+      "2P1O_B_C_NLA",
+      "2P1Q_B_C_IAC"
+    ]
+  },
+  {
+    "representative": [
+      "3E6Y_A_C_CW1"
+    ],
+    "items": [
+      "3E6Y_A_C_CW1"
+    ]
+  },
+  {
+    "representative": [],
+    "items": [
+      "3EZJ_B_F_PO4",
+      "3EZJ_D_H_PO4",
+      "7TE8_C_A_P0T",
+      "7TE8_D_B_P0T"
+    ]
+  },
+  {
+    "representative": [
+      "3IQV_A_P_FSC"
+    ],
+    "items": [
+      "3IQV_A_P_FSC"
+    ]
+  },
+  {
+    "representative": [
+      "4OIC_A_B_A8S",
+      "4DS8_A_B_A8S"
+    ],
+    "items": [
+      "3JRQ_B_A_A8S",
+      "3KB3_A_B_A8S",
+      "3KDJ_A_B_A8S",
+      "3QN1_A_B_A8S",
+      "3UJL_A_B_A8S",
+      "3ZVU_A_B_A8S",
+      "4DS8_A_B_A8S",
+      "4OIC_A_B_A8S",
+      "4WVO_A_B_3UZ",
+      "5JO2_A_B_A8S",
+      "5MN0_A_B_A8S",
+      "7MWN_A_B_WI5",
+      "8AYA_A_B_A1O"
+    ]
+  },
+  {
+    "representative": [],
+    "items": [
+      "3KMZ_A_D_EQO",
+      "3KMZ_B_C_EQO"
+    ]
+  },
+  {
+    "representative": [
+      "3O8I_A_B_M1T"
+    ],
+    "items": [
+      "3O8I_A_B_M1T"
+    ]
+  },
+  {
+    "representative": [
+      "3OGM_B_Q_OGK",
+      "3OGL_B_Q_7JA"
+    ],
+    "items": [
+      "3OGK_B_Q_OGK",
+      "3OGL_B_Q_7JA",
+      "3OGM_B_Q_OGK"
+    ]
+  },
+  {
+    "representative": [
+      "3P1Q_A_P_FSC"
+    ],
+    "items": [
+      "3P1O_A_P_FSC",
+      "3P1Q_A_P_FSC",
+      "3P1S_A_P_FSC",
+      "3SMK_A_P_CW7",
+      "3SMM_A_P_FJA",
+      "3SMN_A_P_FC7",
+      "3SMO_A_P_FJA",
+      "3SP5_A_P_CX7",
+      "3SPR_A_P_FC7",
+      "3UX0_A_P_0DV",
+      "4FR3_A_P_0V4"
+    ]
+  },
+  {
+    "representative": [
+      "6E7U_C_D_HX7",
+      "5EWM_A_B_5SM"
+    ],
+    "items": [
+      "3QEL_A_B_QEL",
+      "3QEL_B_A_QEL",
+      "3QEL_C_D_QEL",
+      "3QEM_A_B_QEM",
+      "3QEM_C_D_QEM",
+      "5EWJ_A_B_QEL",
+      "5EWJ_C_D_QEL",
+      "5EWL_A_B_5SL",
+      "5EWL_C_D_5SL",
+      "5EWM_A_B_5SM",
+      "5EWM_C_D_5SM",
+      "6E7R_A_B_HYS",
+      "6E7R_C_D_HYS",
+      "6E7S_A_B_HZ4",
+      "6E7S_C_D_HZ4",
+      "6E7T_A_B_HYY",
+      "6E7T_C_D_HYY",
+      "6E7U_A_B_HX7",
+      "6E7U_C_D_HX7",
+      "6E7X_A_B_T97",
+      "6E7X_C_D_T97"
+    ]
+  },
+  {
+    "representative": [
+      "4J9Z_R_B_1KP"
+    ],
+    "items": [
+      "3SJQ_A_C_PHU",
+      "3SJQ_B_D_PHU",
+      "4G27_R_B_PHU",
+      "4G28_B_R_0W8",
+      "4G28_R_B_0W8",
+      "4J9Z_R_B_1KP",
+      "5V02_B_R_657",
+      "5WBX_B_R_AJY",
+      "5WC5_B_R_AJV",
+      "6ALE_B_R_1KP"
+    ]
+  },
+  {
+    "representative": [
+      "6GHP_A_P_EZ5"
+    ],
+    "items": [
+      "3SML_A_P_FW1",
+      "6GHP_A_P_EZ5"
+    ]
+  },
+  {
+    "representative": [
+      "4A69_B_C_I0P"
+    ],
+    "items": [
+      "4A69_A_C_I0P",
+      "4A69_B_C_I0P",
+      "4A69_B_D_I0P"
+    ]
+  },
+  {
+    "representative": [
+      "4IHL_A_P_1F5"
+    ],
+    "items": [
+      "4IHL_A_P_1F5",
+      "4IHL_B_P_1F5"
+    ]
+  },
+  {
+    "representative": [
+      "6HMT_A_B_GEH"
+    ],
+    "items": [
+      "4JDD_A_B_FSC",
+      "6HHP_A_B_G4Z",
+      "6HKB_A_B_G8Q",
+      "6HMT_A_B_GEH",
+      "6TJM_A_B_NE5",
+      "6TL3_A_B_NJW",
+      "7B9M_A_B_T4W",
+      "7B9R_A_B_T4Q",
+      "7B9T_A_B_T4Z",
+      "7BA7_A_B_T5W",
+      "7BA9_A_B_T6N",
+      "7BAA_A_B_T5Z",
+      "7BAB_A_B_T6W",
+      "7NIZ_A_B_FSC",
+      "7OPW_A_B_0AW",
+      "7OQ7_A_B_09W",
+      "7OQ8_A_B_0B7",
+      "8AFN_A_B_O6C",
+      "8AI0_A_B_M79",
+      "8ANF_A_B_N1R",
+      "8AV7_A_B_O4I",
+      "8BWJ_A_B_RYR",
+      "8BWX_A_B_RZT",
+      "8BWZ_A_B_S3I",
+      "8BX0_A_B_S2U",
+      "8BX4_A_B_RZC",
+      "8BXM_A_B_S0U",
+      "8BXO_A_B_S1I",
+      "8BXQ_A_B_S3U",
+      "8BXS_A_B_S2E",
+      "8BY9_A_B_S86",
+      "8BYB_A_B_S8O",
+      "8BYC_A_B_S7R",
+      "8BYD_A_B_S7I",
+      "8BYE_A_B_RY0",
+      "8BYF_A_B_S6X",
+      "8BYG_A_B_S6O",
+      "8BYO_A_B_U0L",
+      "8BYY_A_B_SE3",
+      "8BZB_A_B_GEH",
+      "8C04_A_B_GEH",
+      "8C0K_A_B_SOI"
+    ]
+  },
+  {
+    "representative": [
+      "4LSX_A_C_BLD"
+    ],
+    "items": [
+      "4LSX_A_C_BLD",
+      "4M7E_A_C_BLD"
+    ]
+  },
+  {
+    "representative": [
+      "7M2K_A_B_GZM"
+    ],
+    "items": [
+      "4MDK_A_E_U94",
+      "4MDK_B_F_U94",
+      "4MDK_C_G_U94",
+      "4MDK_D_H_U94",
+      "7M2K_A_B_GZM"
+    ]
+  },
+  {
+    "representative": [
+      "4TR9_A_H_38D"
+    ],
+    "items": [
+      "4TR9_A_H_38D"
+    ]
+  },
+  {
+    "representative": [
+      "5EXA_A_D_5SO"
+    ],
+    "items": [
+      "5EXA_A_D_5SO"
+    ]
+  },
+  {
+    "representative": [
+      "5FQD_B_C_LVY"
+    ],
+    "items": [
+      "5FQD_B_C_LVY"
+    ]
+  },
+  {
+    "representative": [
+      "5GWO_C_A_A8S"
+    ],
+    "items": [
+      "5GWO_C_A_A8S",
+      "5GWP_C_A_A8S",
+      "5ZCG_C_A_A8S",
+      "5ZCH_C_A_A8S",
+      "5ZCL_C_A_A8S"
+    ]
+  },
+  {
+    "representative": [
+      "6XK9_C_A_V4M"
+    ],
+    "items": [
+      "5HXB_C_A_85C",
+      "6XK9_C_A_V4M"
+    ]
+  },
+  {
+    "representative": [
+      "5M36_B_C_9SZ"
+    ],
+    "items": [
+      "5M36_B_C_9SZ",
+      "5M37_A_D_9SZ"
+    ]
+  },
+  {
+    "representative": [
+      "5MXO_A_P_FSC"
+    ],
+    "items": [
+      "5MXO_A_P_FSC"
+    ]
+  },
+  {
+    "representative": [
+      "6XMX_C_D_U52"
+    ],
+    "items": [
+      "5N1X_A_B_8HH",
+      "5N1X_C_D_8HH",
+      "6XMX_C_D_U52"
+    ]
+  },
+  {
+    "representative": [
+      "6H0F_B_C_Y70"
+    ],
+    "items": [
+      "6H0F_B_C_Y70",
+      "6H0F_E_F_Y70",
+      "6H0F_H_I_Y70",
+      "6H0F_K_L_Y70",
+      "7U8F_A_C_LWK",
+      "7U8F_D_F_LWK"
+    ]
+  },
+  {
+    "representative": [
+      "6H0G_B_C_Y70"
+    ],
+    "items": [
+      "6H0G_B_C_Y70"
+    ]
+  },
+  {
+    "representative": [
+      "6M90_A_C_J91"
+    ],
+    "items": [
+      "6M90_A_C_J91"
+    ]
+  },
+  {
+    "representative": [
+      "6M91_A_C_J97"
+    ],
+    "items": [
+      "6M91_A_C_J97"
+    ]
+  },
+  {
+    "representative": [
+      "6M92_A_C_J8V"
+    ],
+    "items": [
+      "6M92_A_C_J8V"
+    ]
+  },
+  {
+    "representative": [
+      "6M93_A_C_J8Y"
+    ],
+    "items": [
+      "6M93_A_C_J8Y"
+    ]
+  },
+  {
+    "representative": [
+      "6OQA_E_G_60Z"
+    ],
+    "items": [
+      "6OQA_A_C_60Z",
+      "6OQA_A_C_PG4",
+      "6OQA_A_C_PGE",
+      "6OQA_A_D_60Z",
+      "6OQA_A_D_PE8",
+      "6OQA_A_D_PGE",
+      "6OQA_B_C_60Z",
+      "6OQA_B_C_PG4",
+      "6OQA_B_D_60Z",
+      "6OQA_B_D_PE8",
+      "6OQA_E_G_60Z",
+      "6OQA_E_G_PGE",
+      "6OQA_E_H_60Z",
+      "6OQA_F_G_60Z",
+      "6OQA_F_H_60Z"
+    ]
+  },
+  {
+    "representative": [
+      "6UE5_A_C_Q5J",
+      "6Q0R_B_D_O6M"
+    ],
+    "items": [
+      "6PAI_C_D_O6M",
+      "6Q0R_B_D_O6M",
+      "6Q0V_B_D_P7M",
+      "6Q0W_B_D_EF6",
+      "6SJ7_A_C_EF6",
+      "6UD7_A_C_EF6",
+      "6UE5_A_C_Q5J"
+    ]
+  },
+  {
+    "representative": [
+      "6QDS_A_B_HY5"
+    ],
+    "items": [
+      "6QDS_A_B_HY5"
+    ]
+  },
+  {
+    "representative": [
+      "6TD3_A_B_RC8",
+      "8BUK_G_H_RWE"
+    ],
+    "items": [
+      "6TD3_A_B_RC8",
+      "6TD3_D_E_RC8",
+      "6TD3_G_H_RC8",
+      "8BU2_A_B_RVQ",
+      "8BU2_D_E_RVQ",
+      "8BU2_G_H_RVQ",
+      "8BU3_A_B_RSI",
+      "8BU3_D_E_RSI",
+      "8BU3_G_H_RSI",
+      "8BU4_A_B_RQL",
+      "8BU4_D_E_RQL",
+      "8BU4_G_H_RQL",
+      "8BU5_A_B_RMF",
+      "8BU5_D_E_RMF",
+      "8BU5_G_H_RMF",
+      "8BU6_A_B_RQE",
+      "8BU6_D_E_RQE",
+      "8BU6_G_H_RQE",
+      "8BU7_A_B_RS5",
+      "8BU7_D_E_RS5",
+      "8BU7_G_H_RS5",
+      "8BU9_A_B_RRC",
+      "8BU9_D_E_RRC",
+      "8BU9_G_H_RRC",
+      "8BUA_A_B_RVH",
+      "8BUA_D_E_RVH",
+      "8BUA_G_H_CIT",
+      "8BUA_G_H_RVH",
+      "8BUB_A_B_RNU",
+      "8BUB_D_E_RNU",
+      "8BUB_G_H_RNU",
+      "8BUD_A_B_RP9",
+      "8BUD_D_E_RP9",
+      "8BUD_G_H_RP9",
+      "8BUE_A_B_RVU",
+      "8BUE_D_E_RVU",
+      "8BUE_G_H_RVU",
+      "8BUF_A_B_RW6",
+      "8BUF_D_E_RW6",
+      "8BUF_G_H_RW6",
+      "8BUI_A_B_RV6",
+      "8BUI_D_E_RV6",
+      "8BUI_G_H_RV6",
+      "8BUK_A_B_RWE",
+      "8BUK_D_E_RWE",
+      "8BUK_G_H_RWE",
+      "8BUL_A_B_RSU",
+      "8BUL_D_E_RSU",
+      "8BUL_G_H_RSU",
+      "8BUM_A_B_T6X",
+      "8BUM_D_E_T6X",
+      "8BUM_G_H_T6X",
+      "8BUN_A_B_RNF",
+      "8BUN_D_E_RNF",
+      "8BUN_G_H_RNF",
+      "8BUP_A_B_RWN",
+      "8BUP_D_E_RWN",
+      "8BUP_G_H_RWN",
+      "8BUQ_A_B_RQ9",
+      "8BUQ_D_E_RQ9",
+      "8BUQ_G_H_RQ9",
+      "8BUS_A_B_RMX",
+      "8BUS_D_E_RMX",
+      "8BUS_G_H_RMX",
+      "8BUT_A_B_RQ5",
+      "8BUT_D_E_RQ5",
+      "8BUT_G_H_RQ5"
+    ]
+  },
+  {
+    "representative": [
+      "6UML_C_E_Y70"
+    ],
+    "items": [
+      "6UML_C_E_Y70",
+      "7BQU_A_B_EF2",
+      "7BQV_A_B_F4U"
+    ]
+  },
+  {
+    "representative": [
+      "7LRD_B_A_X5M"
+    ],
+    "items": [
+      "7LRD_B_A_X5M"
+    ]
+  }
+]

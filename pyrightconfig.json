@@ -1,0 +1,15 @@
+{
+    
+    "exclude": [
+      "**/node_modules",
+      "**/__pycache__",
+      "afsout",
+      "build",
+      "configs",
+      "data",
+      "demo",
+      "docs",
+      "output",
+      "tests",
+    ],
+}  

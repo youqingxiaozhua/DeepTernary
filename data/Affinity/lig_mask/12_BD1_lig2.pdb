@@ -1,0 +1,54 @@
+CRYST1   36.800   44.760   78.390  90.00  90.00  90.00 P 21 21 21    4
+HETATM    1  CAA JQ1 A   1      33.983 -35.043  -3.620  1.00  7.28           C
+HETATM    2  CAB JQ1 A   1      39.368 -34.527  -6.393  1.00  9.95           C
+HETATM    3  CAC JQ1 A   1      38.482 -36.802  -8.352  1.00 10.30           C
+HETATM    4  OAG JQ1 A   1      32.125 -36.991 -11.687  1.00 20.67           O
+HETATM    5 CLAH JQ1 A   1      37.659 -42.997  -8.243  1.00  9.02          Cl
+HETATM    6  CAI JQ1 A   1      37.497 -40.478  -7.295  1.00  8.34           C
+HETATM    7  CAJ JQ1 A   1      36.016 -40.967  -9.103  1.00  6.71           C
+HETATM    8  CAK JQ1 A   1      36.994 -39.174  -7.240  1.00  6.66           C
+HETATM    9  CAL JQ1 A   1      35.503 -39.677  -9.039  1.00  6.48           C
+HETATM   10  CAM JQ1 A   1      32.386 -35.895  -9.552  1.00  8.11           C
+HETATM   11  NAN JQ1 A   1      34.226 -37.255  -8.555  1.00  7.69           N
+HETATM   12  NAO JQ1 A   1      32.130 -35.266  -5.342  1.00  8.44           N
+HETATM   13  NAP JQ1 A   1      31.988 -35.479  -6.599  1.00  8.68           N
+HETATM   14  SAR JQ1 A   1      36.585 -34.429  -5.672  1.00  8.19           S
+HETATM   15  CAS JQ1 A   1      32.866 -36.366 -10.930  1.00 13.62           C
+HETATM   16  CAT JQ1 A   1      35.466 -37.413  -8.067  1.00  7.13           C
+HETATM   17  CAU JQ1 A   1      36.996 -41.382  -8.203  1.00  8.01           C
+HETATM   18  CAV JQ1 A   1      33.437 -35.249  -5.035  1.00  7.28           C
+HETATM   19  CAW JQ1 A   1      35.993 -38.751  -8.104  1.00  6.19           C
+HETATM   20  CAX JQ1 A   1      37.927 -35.068  -6.549  1.00  7.78           C
+HETATM   21  CAY JQ1 A   1      37.507 -36.077  -7.408  1.00  7.26           C
+HETATM   22  CAZ JQ1 A   1      33.220 -35.599  -7.128  1.00  7.50           C
+HETATM   23  CBA JQ1 A   1      36.122 -36.386  -7.326  1.00  8.00           C
+HETATM   24  CBB JQ1 A   1      35.477 -35.549  -6.394  1.00  6.74           C
+HETATM   25  CBC JQ1 A   1      33.572 -35.912  -8.597  1.00  9.05           C
+HETATM   26  NBD JQ1 A   1      34.135 -35.494  -6.164  1.00  7.77           N
+CONECT    1   18
+CONECT    2   20
+CONECT    3   21
+CONECT    4   15
+CONECT    5   17
+CONECT    6    8   17
+CONECT    7    9   17
+CONECT    8    6   19
+CONECT    9    7   19
+CONECT   10   15   25
+CONECT   11   16   25
+CONECT   12   13   18
+CONECT   13   12   22
+CONECT   14   20   24
+CONECT   15    4   10
+CONECT   16   11   19   23
+CONECT   17    5    6    7
+CONECT   18    1   12   26
+CONECT   19    8    9   16
+CONECT   20    2   14   21
+CONECT   21    3   20   23
+CONECT   22   13   25   26
+CONECT   23   16   21   24
+CONECT   24   14   23   26
+CONECT   25   10   11   22
+CONECT   26   18   22   24
+END
