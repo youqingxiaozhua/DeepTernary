@@ -15,20 +15,49 @@ DeepTernary is a deep learning-based method for predicting structures of ternary
 
 ## Usage
 
+### Install
+
+#### Hardware requirements
+
+DeepTernary support inferencing on a standard computer with or without GPUs.
+
+#### Software requirements
+
+##### OS Requirements
+
+This codebase is supported for Linux, macOS, and Microsoft, as long as it could install PyTorch.
+
+##### Python Dependencies
+
+1. Please follow the PyTorch document to install PyTorch: https://pytorch.org/get-started/locally/.
+
+2. Install mmengine by: `pip install mmengine`
+
+3. Install the dependencies by: `pip install -r requirements.txt`
+
+The experiments are conducted under following envrionment, but other versions should also work with this codebase. It typically takes 10 minues to install all the dependecies.
+
+- Red Hat Enterprise Linux release 8.8
+- Python==3.10.3
+- PyTorch==2.3.1+cu121
+- mmengine==0.10.3
+
+
+
 ### Prediction
 
 To perform evaluation, follow these steps:
-1. Download the pre-trained checkpoint from [this link](https://zenodo.org/records/12727661).
+1. Download the pre-trained checkpoint from [this link](https://zenodo.org/records/12727661). The testing benchmark pdb files are also included in this zip file.
 2. Unzip the file and move it to the `output/` directory.
 3. Execute the following command to evaluate the model:
-
-> This checkpoint has a better performance with almost 0.70 DockQ on the PROTAC benchmark. 
 
 ```Bash
 python predict_cpu.py output/DeepTernary/PROTAC
 
 python predict_cpu.py output/DeepTernary/MGD
 ```
+
+Typically, the results for every test sample should be shown in 5 minues.
 
 For PROTAC prediction with different PROTACs, there is a simple API in `predict_btk.py`:
 
@@ -46,6 +75,8 @@ predict_one_unbound(
     cfg=cfg)
 
 ```
+
+This will save the predicted ternary complex pdb file in the `cfg.save_dir` directory.
 
 ### Training
 

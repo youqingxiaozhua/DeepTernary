@@ -135,6 +135,7 @@ venv.bak/
 .DS_Store
 /output
 /data/DeepTernaryDs
+.history
 
 # Pytorch
 *.pth
