@@ -161,10 +161,6 @@ def main():
         # if 'runner_type' is set in the cfg
         runner = RUNNERS.build(cfg)
 
-    # save projects folder to workdir
-    rank, world_size = get_dist_info()
-    if rank == 0:
-        shutil.copytree('projects', osp.join(cfg.work_dir, 'projects'), dirs_exist_ok=True)
     # start training
     runner.train()
 

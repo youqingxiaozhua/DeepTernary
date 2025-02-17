@@ -22,18 +22,18 @@ from mmpretrain.apis.model import get_model
 from scipy.optimize import linear_sum_assignment
 
 
-from projects.equibind.models.geometry_utils import rigid_transform_Kabsch_3D, get_torsions, get_dihedral_vonMises, \
+from deepternary.models.geometry_utils import rigid_transform_Kabsch_3D, get_torsions, get_dihedral_vonMises, \
     apply_changes, \
     random_rotation_translation
-from projects.equibind.models.process_mols import read_molecule, get_lig_graph_revised, \
+from deepternary.models.process_mols import read_molecule, get_lig_graph_revised, \
     get_rec_graph, get_geometry_graph, get_geometry_graph_ring, \
     get_receptor_inference, get_multiple_lig_graph_revised
-from projects.equibind.models.rotate_utils import kabsch, reverse_rotate_and_translate, rotate_and_translate
-from projects.equibind.models.path import PDB_PATH
+from deepternary.models.rotate_utils import kabsch, reverse_rotate_and_translate, rotate_and_translate
+from deepternary.models.path import PDB_PATH
 
-from projects.equibind.models.ternary_pdb import TernaryPreprocessedDataset, get_pocket_and_mask
-from projects.equibind.models.pdb_utils import get_pdb_coords, combine_multiple_pdb, set_new_coords, write_pdb, merge_pdbs
-from projects.equibind.models.correct import correct_ligand, fix_clashes
+from deepternary.models.ternary_pdb import TernaryPreprocessedDataset, get_pocket_and_mask
+from deepternary.models.pdb_utils import get_pdb_coords, combine_multiple_pdb, set_new_coords, write_pdb, merge_pdbs
+from deepternary.models.correct import correct_ligand, fix_clashes
 
 run_corrections = False
 realign_after_correction = False  # 效果不好

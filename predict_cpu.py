@@ -19,16 +19,15 @@ from torch.multiprocessing import set_start_method
 from tqdm import tqdm
 
 from mmpretrain.apis.model import get_model
-from mmpretrain.registry import DATASETS
 
 try:
     set_start_method('spawn')
 except:
     pass
 
-from projects.equibind.models.geometry_utils import random_rotation_translation
-from projects.equibind.models.path import PDB_PATH, IDEAL_PATH
-from projects.equibind.models.process_mols import (
+from deepternary.models.geometry_utils import random_rotation_translation
+from deepternary.models.path import PDB_PATH, IDEAL_PATH
+from deepternary.models.process_mols import (
     get_geometry_graph,
     get_geometry_graph_ring,
     get_lig_graph_revised,
@@ -37,13 +36,13 @@ from projects.equibind.models.process_mols import (
     get_receptor_inference,
     read_molecule,
 )
-from projects.equibind.models.rotate_utils import (
+from deepternary.models.rotate_utils import (
     kabsch,
     rotate_and_translate,
 )
-from projects.equibind.models.ternary_pdb import get_pocket_and_mask
-from projects.equibind.models.pdb_utils import get_pdb_coords, merge_pdbs, set_new_coords, write_pdb, set_new_chain
-from projects.equibind.models.correct import correct_ligand
+from deepternary.models.ternary_pdb import get_pocket_and_mask
+from deepternary.models.pdb_utils import get_pdb_coords, merge_pdbs, set_new_coords, write_pdb, set_new_chain
+from deepternary.models.correct import correct_ligand
 
 use_rdkit_coords = True
 
@@ -321,7 +320,6 @@ def predict_one_unbound(name, cfg=None, seed_num=40):
 @torch.no_grad()
 def predict_one_bound(name, cfg=None, seed_num=1):
     UNBOUND = False
-    # PDB_PATH = '/home/xuefanglei/data/DeepTernary/pdb2311_glue'
     print(f'--{name}--')
     model = cfg.nn_model
     ds_cfg = cfg.test_dataloader.dataset
@@ -583,6 +581,7 @@ if __name__ == '__main__':
     sm_rmsds = []
     p2_rmsds_gt = []
     for result in results:
+        result = sorted(result, key=lambda x: x['pred_p2_rmsd'])
         dockqs.append([i['dockq'] for i in result])
         p2_rmsds.append([i['pred_p2_rmsd'] for i in result])
         sm_rmsds.append([i['sm_rmsd'] for i in result])

@@ -2,8 +2,8 @@ from copy import deepcopy
 from tqdm import tqdm
 import torch
 from mmpretrain import get_model
-from projects.equibind.models.path import PREPROCESSED_PATH
-from projects.equibind.models.process_mols import get_pocket_and_mask
+from deepternary.models.path import PREPROCESSED_PATH
+from deepternary.models.process_mols import get_pocket_and_mask
 
 config = 'output/PP_No4_poc_alpoc_poc_poc_poc_poc/protac.py'
 ckpt = 'output/PP_No4_poc_alpoc_poc_poc_poc_poc/epoch_1000.pth'

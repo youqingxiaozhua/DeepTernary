@@ -27,16 +27,16 @@ from rdkit.Chem import MolFromPDBFile, AllChem
 from rdkit.Chem.MolStandardize import rdMolStandardize
 
 
-from projects.equibind.models.geometry_utils import rigid_transform_Kabsch_3D, get_torsions, get_dihedral_vonMises, apply_changes, \
+from deepternary.models.geometry_utils import rigid_transform_Kabsch_3D, get_torsions, get_dihedral_vonMises, apply_changes, \
     random_rotation_translation
-from projects.equibind.models.process_mols import read_molecule, get_lig_graph_revised, \
+from deepternary.models.process_mols import read_molecule, get_lig_graph_revised, \
     get_rec_graph, get_geometry_graph, get_geometry_graph_ring, \
     get_receptor_inference, get_multiple_lig_graph_revised
-from projects.equibind.models.rotate_utils import kabsch, reverse_rotate_and_translate, rotate_and_translate
-from projects.equibind.models.path import PDB_PATH
+from deepternary.models.rotate_utils import kabsch, reverse_rotate_and_translate, rotate_and_translate
+from deepternary.models.path import PDB_PATH
 
-from projects.equibind.models.ternary_pdb import TernaryPreprocessedDataset, get_pocket_and_mask
-from projects.equibind.models.utils import combine_multiple_pdb, RMSD
+from deepternary.models.ternary_pdb import TernaryPreprocessedDataset, get_pocket_and_mask
+from deepternary.models.utils import combine_multiple_pdb, RMSD
 
 SEED_NUM = 5
 
