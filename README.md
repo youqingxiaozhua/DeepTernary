@@ -40,6 +40,35 @@ TernaryDB
 
 ## Usage
 
+### Install
+
+#### Hardware requirements
+
+DeepTernary support inferencing on a standard computer with or without GPUs.
+
+#### Software requirements
+
+##### OS Requirements
+
+This codebase is supported for Linux, macOS, and Microsoft, as long as it could install PyTorch.
+
+##### Python Dependencies
+
+1. Please follow the PyTorch document to install PyTorch: https://pytorch.org/get-started/locally/.
+
+2. Install mmengine by: `pip install mmengine`
+
+3. Install the dependencies by: `pip install -r requirements.txt`
+
+The experiments are conducted under following envrionment, but other versions should also work with this codebase. It typically takes 10 minues to install all the dependecies.
+
+- Red Hat Enterprise Linux release 8.8
+- Python==3.10.3
+- PyTorch==2.3.1+cu121
+- mmengine==0.10.3
+
+
+
 ### Config Files
 
 The model is defined in the following config file, please use the corresponding config file for the task.
@@ -71,6 +100,7 @@ python predict_cpu.py output/DeepTernary/PROTAC
 # MGD need to process the test data, see `TernaryDB/MGD/test.txt`
 # python predict_cpu.py output/DeepTernary/MGD
 ```
+Typically, the results for every test sample should be shown in 5 minues.
 
 For PROTAC prediction with different PROTACs, there is a simple API in `predict_btk.py`:
 
@@ -88,6 +118,8 @@ predict_one_unbound(
     cfg=cfg)
 
 ```
+
+This will save the predicted ternary complex pdb file in the `cfg.save_dir` directory.
 
 ### Training
 
