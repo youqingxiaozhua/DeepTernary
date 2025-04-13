@@ -14,7 +14,7 @@ DeepTernary is a deep learning-based method for predicting structures of ternary
 
 ## TernaryDB
 
-The collected **TernaryDB** dataset can be downloaded [here](https://github.com/youqingxiaozhua/DeepTernary/releases/download/untagged-4b1648709c8f32cf6d26/TernaryDB.zip).
+The collected **TernaryDB** dataset can be downloaded [here](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/TernaryDB.zip).
 
 The PROTAC, the `val.csv` and `test.csv` have three columns, they represent complex_id, unbound structure for p1 and p2, respectively.
 
@@ -82,14 +82,14 @@ The model is defined in the following config file, please use the corresponding 
 ### Prediction
 
 To perform evaluation, follow these steps:
-1. Download the pre-trained checkpoint and PROTAC unbound structures from [this link](https://github.com/youqingxiaozhua/DeepTernary/releases/download/untagged-4b1648709c8f32cf6d26/output.zip).
+1. Download the pre-trained checkpoint and PROTAC unbound structures from [this link](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip).
 2. Unzip the folder and move it to the root directory of this codebase.
 3. Execute the following command to evaluate the model:
 
 
 ```Bash
 # download the pre-trained checkpoints and unbound structures
-wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/untagged-4b1648709c8f32cf6d26/output.zip
+wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip
 
 # unzip data
 unzip output.zip
