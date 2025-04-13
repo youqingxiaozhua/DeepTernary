@@ -2,18 +2,24 @@
 import argparse
 import os
 import shutil
+from functools import partial
 import tempfile
 import time
 from copy import deepcopy
 from datetime import datetime
 from typing import List
 
+import dgl
 import numpy as np
+import scipy.spatial as spa
 import torch
 from biopandas.pdb import PandasPdb
 from mmengine.config import Config
 from prettytable import PrettyTable
 from rdkit import Chem
+from rdkit.Chem import rdDistGeom
+from rdkit.DistanceGeometry.DistGeom import DoTriangleSmoothing
+from scipy.special import softmax
 from torch import multiprocessing
 from torch.multiprocessing import set_start_method
 from tqdm import tqdm
@@ -25,28 +31,207 @@ try:
 except:
     pass
 
+from deepternary.models.correct import correct_ligand
 from deepternary.models.geometry_utils import random_rotation_translation
-from deepternary.models.path import PDB_PATH, IDEAL_PATH
+from deepternary.models.logger import log
+from deepternary.models.path import IDEAL_PATH, PDB_PATH
+from deepternary.models.pdb_utils import (
+    merge_pdbs,
+    set_new_chain,
+    set_new_coords,
+    write_pdb,
+)
 from deepternary.models.process_mols import (
-    get_geometry_graph,
+    distance_featurizer,
     get_geometry_graph_ring,
     get_lig_graph_revised,
-    get_multiple_lig_graph_revised,
+    get_rdkit_coords_v2,
     get_rec_graph,
     get_receptor_inference,
+    lig_atom_featurizer,
     read_molecule,
+    rigid_transform_Kabsch_3D
 )
-from deepternary.models.rotate_utils import (
-    kabsch,
-    rotate_and_translate,
-)
+from deepternary.models.rotate_utils import kabsch, rotate_and_translate
 from deepternary.models.ternary_pdb import get_pocket_and_mask
-from deepternary.models.pdb_utils import get_pdb_coords, merge_pdbs, set_new_coords, write_pdb, set_new_chain
-from deepternary.models.correct import correct_ligand
 
 use_rdkit_coords = True
 
-THREAD_NUM = 2
+THREAD_NUM = 5
+FIX_TWO_ENDS = False  # whether to fix the two ends of the PROTAC
+CORRECT_LIGAND = True   # run EquiBind correction for ligand
+
+
+def adjust_bounds(bounds_mat, atom_map, mol):
+    """
+    Codes from Reviewer #3.
+    Adjusts the bounds matrix based on the distance between atoms in the given map.
+
+    Args:
+        bounds_mat: The bounds matrix to adjust.
+        atom_map: A list of atom indices.
+        mol: The molecule object.
+
+    Returns:
+        A tuple containing the adjusted bounds matrix and the result of triangle smoothing.
+    """
+    for i in range(len(atom_map)):
+        atom_i = atom_map[i]
+        for j in range(i + 1, len(atom_map)):
+            atom_j = atom_map[j]
+            a = min(atom_i, atom_j)
+            b = max(atom_i, atom_j)
+            pos1 = mol.GetConformer().GetAtomPosition(a)
+            pos2 = mol.GetConformer().GetAtomPosition(b)
+            distance = pos1.Distance(pos2)
+            bounds_mat[a, b] = distance + 0.1
+            bounds_mat[b, a] = distance - 0.1
+    check = DoTriangleSmoothing(bounds_mat)
+
+    return bounds_mat, check
+
+
+def get_rdkit_coords_with_fixed_ends(ligand, lig1, lig2, seed=None):
+    """
+    Codes from Reviewer #3.
+    fixed two ends, only use rdkit to generate the rest of the coordinates"""
+    params = rdDistGeom.ETKDGv3()
+    ch1_map = ligand.GetSubstructMatch(lig1)
+    ch2_map = ligand.GetSubstructMatch(lig2)
+    if not (len(ch1_map) and len(ch2_map)):
+        # fall back to the original method
+        conf_id = rdDistGeom.EmbedMolecule(ligand, params)
+    else:
+        bounds = rdDistGeom.GetMoleculeBoundsMatrix(ligand)
+        bounds, check1 = adjust_bounds(bounds, ch1_map, ligand)
+        bounds, check2 = adjust_bounds(bounds, ch2_map, ligand)
+        params.SetBoundsMat(bounds)
+        if seed is not None:
+            params.randomSeed = seed
+        conf_ids = rdDistGeom.EmbedMultipleConfs(ligand, 1, params)
+    ligand = Chem.RemoveHs(ligand)
+    conf = ligand.GetConformer()
+    lig_coords = conf.GetPositions()
+    return ligand, lig_coords
+
+
+embedding_failed_names = set()
+def get_lig_graph_protac(
+    mol,
+    name,
+    lig1=None,
+    lig2=None,
+    radius=20,
+    max_neighbors=None,
+    use_rdkit_coords=False,
+    use_random_coords=True,
+    ideal_path=None,
+    seed=None,
+):
+    conf = mol.GetConformer()
+    true_lig_coords = conf.GetPositions()
+    if use_rdkit_coords:
+        if name in embedding_failed_names:
+            rdkit_coords = None
+        else:
+            try:
+                mol, rdkit_coords = get_rdkit_coords_with_fixed_ends(mol, lig1, lig2, seed=seed)
+            except Exception as e:
+                print(f"Error in getting RDKit coordinates: {e}")
+                rdkit_coords = None
+        if rdkit_coords is None:
+            print(f"{name} RDKit coordinate generation failed. Using ideal.sdf")
+            embedding_failed_names.add(name)
+            if isinstance(ideal_path, str):
+                ideal_mol = read_molecule(ideal_path, sanitize=True, remove_hs=True)
+            else:
+                ideal_mol = ideal_path
+            if ideal_mol is None:
+                raise ValueError(f"ideal_mol is None for {ideal_path}")
+
+            try:
+                mol, rdkit_coords = get_rdkit_coords_with_fixed_ends(deepcopy(ideal_mol), lig1, lig2, seed=seed)
+            except Exception as e:
+                mol, rdkit_coords = get_rdkit_coords_v2(deepcopy(ideal_mol), seed=seed, use_random_coords=use_random_coords)
+
+            if mol is None:
+                mol = ideal_mol
+                try:
+                    rdkit_coords = ideal_mol.GetConformer().GetPositions()
+                except Exception as e:
+                    raise RuntimeError(f"ideal_mol {ideal_path} RDKit coordinate generation failed: {e}")
+            # assert rdkit_coords is not None, f'ideal_mol {ideal_path} RDKit coordinate generation failed'
+            # rdkit_coords = ideal_mol.GetConformer().GetPositions()
+            if rdkit_coords.shape != true_lig_coords.shape:
+                raise RuntimeError(
+                    f"{name}, rdkit_coords.shape = {rdkit_coords.shape}, \
+                true_lig_coords.shape = {true_lig_coords.shape}"
+                )
+
+            # mol = ideal_mol
+        R, t = rigid_transform_Kabsch_3D(rdkit_coords.T, true_lig_coords.T)
+        lig_coords = (R @ (rdkit_coords).T).T + t.squeeze()
+    else:
+        lig_coords = true_lig_coords
+    num_nodes = lig_coords.shape[0]
+    assert lig_coords.shape[1] == 3
+    distance = spa.distance.cdist(lig_coords, lig_coords)
+
+    src_list = []
+    dst_list = []
+    dist_list = []
+    mean_norm_list = []
+    for i in range(num_nodes):
+        dst = list(np.where(distance[i, :] < radius)[0])
+        dst.remove(i)
+        if max_neighbors != None and len(dst) > max_neighbors:
+            dst = list(np.argsort(distance[i, :]))[
+                1 : max_neighbors + 1
+            ]  # closest would be self loop
+        if len(dst) == 0:
+            dst = list(np.argsort(distance[i, :]))[
+                1:2
+            ]  # closest would be the index i itself > self loop
+            log(
+                f"The lig_radius {radius} was too small for one lig atom such that it had no neighbors. So we connected {i} to the closest other lig atom {dst}"
+            )
+        assert i not in dst
+        assert dst != []
+        src = [i] * len(dst)
+        src_list.extend(src)
+        dst_list.extend(dst)
+        valid_dist = list(distance[i, dst])
+        dist_list.extend(valid_dist)
+        valid_dist_np = distance[i, dst]
+        sigma = np.array([1.0, 2.0, 5.0, 10.0, 30.0]).reshape((-1, 1))
+        weights = softmax(
+            -valid_dist_np.reshape((1, -1)) ** 2 / sigma, axis=1
+        )  # (sigma_num, neigh_num)
+        assert weights[0].sum() > 1 - 1e-2 and weights[0].sum() < 1.01
+        diff_vecs = lig_coords[src, :] - lig_coords[dst, :]  # (neigh_num, 3)
+        mean_vec = weights.dot(diff_vecs)  # (sigma_num, 3)
+        denominator = weights.dot(np.linalg.norm(diff_vecs, axis=1))  # (sigma_num,)
+        mean_vec_ratio_norm = np.linalg.norm(mean_vec, axis=1) / denominator  # (sigma_num,)
+
+        mean_norm_list.append(mean_vec_ratio_norm)
+    assert len(src_list) == len(dst_list)
+    assert len(dist_list) == len(dst_list)
+    graph = dgl.graph(
+        (torch.tensor(src_list), torch.tensor(dst_list)), num_nodes=num_nodes, idtype=torch.int32
+    )
+
+    graph.ndata["feat"] = lig_atom_featurizer(mol)
+    graph.edata["feat"] = distance_featurizer(
+        dist_list, 0.75
+    )  # avg distance = 1.3 So divisor = (4/7)*1.3 = ~0.75
+    graph.ndata["x"] = torch.from_numpy(np.array(true_lig_coords).astype(np.float32))
+    graph.ndata["mu_r_norm"] = torch.from_numpy(np.array(mean_norm_list).astype(np.float32))
+    if use_rdkit_coords:
+        graph.ndata["new_x"] = torch.from_numpy(np.array(lig_coords).astype(np.float32))
+    return mol, graph
+
+
+
 
 def save_mol_to_pdb(mol, path):
     mol = deepcopy(mol)
@@ -146,12 +331,20 @@ def predict_one_unbound(name, cfg=None, seed_num=40):
                             c_alpha_max_neighbors=ds_cfg.c_alpha_max_neighbors,)
     protein2_coords_gt = deepcopy(p2_graph_origin.ndata['x'])
 
+    if FIX_TWO_ENDS:
+        lig1 = read_molecule(os.path.join(UNBOUND_FOLDER, name, 'unbound_lig1.pdb'), sanitize=True, remove_hs=True)
+        lig2 = read_molecule(os.path.join(UNBOUND_FOLDER, name, 'unbound_lig2.pdb'), sanitize=True, remove_hs=True)
+
     results = []
     for seed in range(seed_num):
         lig = deepcopy(lig_origin)
         p1_graph = deepcopy(p1_graph_origin)
         p2_graph = deepcopy(p2_graph_origin)
-        lig, lig_graph = get_lig_graph_revised(
+        if FIX_TWO_ENDS:
+            graph_func =  partial(get_lig_graph_protac, lig1=lig1, lig2=lig2)
+        else:
+            graph_func = get_lig_graph_revised
+        lig, lig_graph = graph_func(
             lig, name=name, max_neighbors=ds_cfg.lig_max_neighbors,
             ideal_path=f'{IDEAL_PATH}/{name[-3:]}_ideal.sdf',
             # ideal_path=None,
@@ -247,9 +440,10 @@ def predict_one_unbound(name, cfg=None, seed_num=40):
         # lig_pdb.df['HETATM'][['x_coord', 'y_coord', 'z_coord']] = prediction.cpu().numpy()
         # lig_pdb.to_pdb(lig_pred_file, records=['HETATM'], gz=False)
 
-        # # run correction
-        # prediction = correct_ligand(prediction, lig_graph.ndata['new_x'], lig)
-        # prediction = torch.from_numpy(prediction).float()
+        # run correction
+        if CORRECT_LIGAND:
+            prediction = correct_ligand(prediction, lig_graph.ndata['new_x'], lig)
+            prediction = torch.from_numpy(prediction).float()
 
         lig_pred_path = os.path.join(cfg.tmp_dir.name, f'lig_pred_{name}_{seed}.pdb')
         pred_lig = set_new_coords(lig_path, prediction.cpu().numpy(), is_ligand=True)
@@ -441,8 +635,9 @@ def predict_one_bound(name, cfg=None, seed_num=1):
         # print('Kabsch RMSD: ', f'{RMSD(kabsch_lig_pred, lig_coords_gt):.2f}')
 
         # run correction
-        prediction = correct_ligand(prediction, lig_graph.ndata['new_x'], lig)
-        prediction = torch.from_numpy(prediction).float()
+        if CORRECT_LIGAND:
+            prediction = correct_ligand(prediction, lig_graph.ndata['new_x'], lig)
+            prediction = torch.from_numpy(prediction).float()
 
         # save predict ligand
         lig_path = os.path.join(PDB_PATH, name, 'ligand.pdb')
@@ -586,35 +781,12 @@ if __name__ == '__main__':
         p2_rmsds.append([i['pred_p2_rmsd'] for i in result])
         sm_rmsds.append([i['sm_rmsd'] for i in result])
         p2_rmsds_gt.append([i['gt_p2_rmsd'] for i in result])
-    import matplotlib.cm as cm
-    import matplotlib.pyplot as plt
 
-    # plt.scatter(p2_rmsds, dockqs)
-    # p2_rmsds = np.log(p2_rmsds)
     p2_rmsds = np.array(p2_rmsds)
     result_shape = p2_rmsds.shape
     p2_rmsds = p2_rmsds.flatten()
     dockqs = np.array(dockqs).flatten()
     p2_rmsds_gt = np.array(p2_rmsds_gt).flatten()
-    try:
-        m, b = np.polyfit(p2_rmsds, p2_rmsds_gt, 1)
-        # m, b, c = np.polyfit(p2_rmsds, dockqs, 2)
-    except Exception as e:
-        print(e)
-        print('polyfit failed')
-    else:
-        plt.plot(p2_rmsds, m * p2_rmsds + b, color='red')   # plot the regression line
-        # plt.plot(p2_rmsds, m * p2_rmsds ** 2 + b * p2_rmsds + c, color='green')   # plot the regression line
-    plt.scatter(p2_rmsds, p2_rmsds_gt)
-    p2_rmsds = p2_rmsds.reshape(*result_shape)
-    dockqs = dockqs.reshape(result_shape)
-    colors = cm.jet(np.linspace(0, 1, len(complex_names)))
-    # for (x, y, c) in zip(p2_rmsds, dockqs, colors):
-    #     plt.scatter(x, y, color=c)
-    plt.xlabel('pred p2 rmsd')
-    plt.ylabel('p2_rmsds_gt')
-    fig_path = os.path.join(args.work_dir, f'dockq_vs_p2_rmsd_{datetime.now().strftime("%Y%m%d%H%M%S")}.png')
-    plt.savefig(fig_path)
 
     # antique hit rate
     hit_num_list = []
