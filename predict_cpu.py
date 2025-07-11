@@ -518,8 +518,8 @@ def predict_one_bound(name, cfg=None, seed_num=1):
     model = cfg.nn_model
     ds_cfg = cfg.test_dataloader.dataset
 
-    lig_path = os.path.join(PDB_PATH, name, 'ligand.sdf')
-    p1_path = os.path.join(PDB_PATH, name, 'protein1.cif')
+    lig_path = os.path.join(PDB_PATH, name, 'ligand.pdb')
+    p1_path = os.path.join(PDB_PATH, name, 'protein1.pdb')
     p2_path = os.path.join(PDB_PATH, name, 'protein2.pdb')
 
     # lig_path = f'data/PDBBind/{name}/{name}_ligand.mol2'
@@ -682,6 +682,9 @@ def predict_one_bound(name, cfg=None, seed_num=1):
                 os.path.join(PDB_PATH, name, 'gt_complex.pdb'))
         except Exception as e:
             print(e)
+            fnat = 0.
+            irms = 0.
+            Lrms = 0.
             DockQ = 0.
         results.append(dict(
             fnat=fnat,
