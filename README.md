@@ -98,10 +98,10 @@ wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/out
 unzip output.zip
 
 # evaluate on the PROTAC test set
-python predict_cpu.py output/DeepTernary/PROTAC
+python predict_cpu.py output/checkpoints/PROTAC
 
 # MGD need to process the test data, see `TernaryDB/MGD/test.txt`
-# python predict_cpu.py output/DeepTernary/MGD
+# python predict_cpu.py output/checkpoints/MGD
 ```
 Typically, the results for every test sample should be shown in 5 minues.
 

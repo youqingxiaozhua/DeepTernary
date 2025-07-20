@@ -62,6 +62,18 @@ FIX_TWO_ENDS = False  # whether to fix the two ends of the PROTAC
 CORRECT_LIGAND = True   # run EquiBind correction for ligand
 
 
+def auto_download_ideal_sdf(lig_name):
+    import requests
+    ideal_sdf_path = f'{IDEAL_PATH}/{lig_name}_ideal.sdf'
+    if not os.path.exists(ideal_sdf_path):
+        os.makedirs(IDEAL_PATH, exist_ok=True)
+        url = f'https://files.rcsb.org/ligands/download/{lig_name}_ideal.sdf'
+        response = requests.get(url)
+        with open(ideal_sdf_path, 'wb') as f:
+            f.write(response.content)
+    return ideal_sdf_path
+
+
 def adjust_bounds(bounds_mat, atom_map, mol):
     """
     Codes from Reviewer #3.
@@ -125,7 +137,6 @@ def get_lig_graph_protac(
     max_neighbors=None,
     use_rdkit_coords=False,
     use_random_coords=True,
-    ideal_path=None,
     seed=None,
 ):
     conf = mol.GetConformer()
@@ -142,10 +153,8 @@ def get_lig_graph_protac(
         if rdkit_coords is None:
             print(f"{name} RDKit coordinate generation failed. Using ideal.sdf")
             embedding_failed_names.add(name)
-            if isinstance(ideal_path, str):
-                ideal_mol = read_molecule(ideal_path, sanitize=True, remove_hs=True)
-            else:
-                ideal_mol = ideal_path
+            ideal_path = auto_download_ideal_sdf(name.split('_')[-1])
+            ideal_mol = read_molecule(ideal_path, sanitize=True, remove_hs=True)
             if ideal_mol is None:
                 raise ValueError(f"ideal_mol is None for {ideal_path}")
 
@@ -346,7 +355,7 @@ def predict_one_unbound(name, cfg=None, seed_num=40):
             graph_func = get_lig_graph_revised
         lig, lig_graph = graph_func(
             lig, name=name, max_neighbors=ds_cfg.lig_max_neighbors,
-            ideal_path=f'{IDEAL_PATH}/{name[-3:]}_ideal.sdf',
+            ideal_path=auto_download_ideal_sdf(name.split('_')[-1]),
             # ideal_path=None,
             use_random_coords=False,
             seed=seed,
@@ -559,8 +568,7 @@ def predict_one_bound(name, cfg=None, seed_num=1):
         assert len(lig_id) == 3
         lig, lig_graph = get_lig_graph_revised(
             lig, name=name, max_neighbors=ds_cfg.lig_max_neighbors,
-            ideal_path=f'{IDEAL_PATH}/{lig_id}_ideal.sdf',
-            # ideal_path=None,
+            ideal_path=auto_download_ideal_sdf(lig_id),
             use_random_coords=False,
             seed=seed,
             use_rdkit_coords=True, radius=ds_cfg.lig_graph_radius)
