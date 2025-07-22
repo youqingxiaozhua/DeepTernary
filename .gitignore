@@ -118,11 +118,9 @@ venv.bak/
 .mypy_cache/
 
 # custom
-# /data
-/data/DeepTernary/preprosessd
-/data/MolecularGlue/seperate
-/data/PDBBind
-/data/processed
+/data
+!/data/PROTAC
+!/data/MolecularGlue
 *.zip
 .idea
 *.pkl
@@ -134,7 +132,6 @@ venv.bak/
 /mmpretrain/.mim
 .DS_Store
 /output
-/data/DeepTernaryDs
 .history
 
 # Pytorch
