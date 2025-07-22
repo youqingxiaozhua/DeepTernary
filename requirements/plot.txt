@@ -1,4 +1,0 @@
-umap-learn
-hdbscan
-stylia
-seaborn

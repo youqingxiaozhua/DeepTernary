@@ -7,6 +7,7 @@ SE(3)-Equivariant Ternary Complex Prediction Towards Target Protein Degradation
 ---
 
 ## Update
+- **2025-07-21**: Release all ternary pdb files and support automatic download of ideal ligands.
 - **2025-05-25**: Since the journal doesn't allow including thanks to anonymous referees, we would like to express our gratitude to the reviewer 3 for providing the RDKit codes to rigidly fix PROTAC chemical handles during conformational searches.
 
 ## Overview
@@ -17,7 +18,7 @@ DeepTernary is a deep learning-based method for predicting structures of ternary
 
 ## TernaryDB
 
-The collected **TernaryDB** dataset can be downloaded [here](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/TernaryDB.zip).
+The collected **TernaryDB** dataset can be downloaded [here](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.1/TernaryDB.tar.gz).
 
 The PROTAC, the `val.csv` and `test.csv` have three columns, they represent complex_id, unbound structure for p1 and p2, respectively.
 
@@ -28,6 +29,10 @@ File structure:
 
 ```
 TernaryDB
+├── pdbs
+│   ├── 1A2Y_A_C_PO4
+│   │   └── gt_complex.pdb
+│   ...
 ├── MGD
 │   ├── test.txt
 │   ├── train_clusters.json
@@ -40,6 +45,7 @@ TernaryDB
     └── val.csv
 ```
 
+Please place the `TernaryDB` folder in the `data` folder of this codebase, otherwise, you need to modify the `DATA_BASE` variable in `deepternary/models/path.py` to the correct path.
 
 ## Usage
 
@@ -58,10 +64,13 @@ This codebase is supported for Linux, macOS, and Microsoft, as long as it could 
 ##### Python Dependencies
 
 1. Please follow the PyTorch document to install PyTorch: https://pytorch.org/get-started/locally/.
+    For example, for PyTorch 2.3.1 with CUDA 12.1, you can use the following command:
+    
+    ```bash
+    pip install torch==2.3.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+    ```
 
-2. Install mmengine by: `pip install mmengine`
-
-3. Install the dependencies by: `pip install -r requirements.txt`
+2. Install the dependencies by: `pip install -r requirements.txt`
 
 The experiments are conducted under following envrionment, but other versions should also work with this codebase. It typically takes 10 minues to install all the dependecies.
 
@@ -134,3 +143,26 @@ bash tools/dist_train.sh deepternary/configs/protac.py 2
 
 Codes for model and dataset are located under `deepternary/models/`, their defination is in the config files under `deepternary/configs/`.
 
+
+# Citing this work
+
+If you find this codebase, the model useful, please cite our paper:
+
+```BibTeX
+@article{xueDeepTernary2025,
+  title = {{{SE}}(3)-Equivariant Ternary Complex Prediction towards Target Protein Degradation},
+  shorttitle = {{{DeepTernary}}},
+  author = {Xue, Fanglei and Zhang, Meihan and Li, Shuqi and Gao, Xinyu and Wohlschlegel, James A. and Huang, Wenbing and Yang, Yi and Deng, Weixian},
+  year = {2025},
+  month = jul,
+  journal = {Nature Communications},
+  volume = {16},
+  number = {1},
+  pages = {5514},
+  publisher = {Nature Publishing Group},
+  issn = {2041-1723},
+  doi = {10.1038/s41467-025-61272-5},
+  urldate = {2025-07-22},
+  langid = {english}
+}
+```
