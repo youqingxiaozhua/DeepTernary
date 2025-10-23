@@ -101,7 +101,7 @@ To perform evaluation, follow these steps:
 
 ```Bash
 # download the pre-trained checkpoints and unbound structures
-wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip
+wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.1/output.zip
 
 # unzip data
 unzip output.zip
@@ -166,3 +166,4 @@ If you find this codebase, the model useful, please cite our paper:
   langid = {english}
 }
 ```
+
