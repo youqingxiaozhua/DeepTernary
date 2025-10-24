@@ -94,14 +94,14 @@ The model is defined in the following config file, please use the corresponding 
 ### Prediction
 
 To perform evaluation, follow these steps:
-1. Download the pre-trained checkpoint and PROTAC unbound structures from [this link](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip).
+1. Download the pre-trained checkpoint and PROTAC unbound structures from [this link](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.1/output.zip).
 2. Unzip the folder and move it to the root directory of this codebase.
 3. Execute the following command to evaluate the model:
 
 
 ```Bash
 # download the pre-trained checkpoints and unbound structures
-wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip
+wget https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.1/output.zip
 
 # unzip data
 unzip output.zip
@@ -166,3 +166,5 @@ If you find this codebase, the model useful, please cite our paper:
   langid = {english}
 }
 ```
+
+
