@@ -132,20 +132,26 @@ def get_rdkit_coords_with_fixed_ends(ligand, lig1, lig2, seed=None):
     Codes from Reviewer #3.
     Fixed two ends, only use rdkit to generate the rest of the coordinates"""
     params = rdDistGeom.ETKDGv3()
+    if seed is not None:
+        params.randomSeed = seed
     ch1_map = ligand.GetSubstructMatch(lig1)
     ch2_map = ligand.GetSubstructMatch(lig2)
     if not (len(ch1_map) and len(ch2_map)):
         # fall back to the original method
         conf_id = rdDistGeom.EmbedMolecule(ligand, params)
+        if conf_id < 0 or ligand.GetNumConformers() == 0:
+            raise RuntimeError("RDKit EmbedMolecule failed to generate a conformer.")
     else:
         bounds = rdDistGeom.GetMoleculeBoundsMatrix(ligand)
         bounds, check1 = adjust_bounds(bounds, ch1_map, ligand)
         bounds, check2 = adjust_bounds(bounds, ch2_map, ligand)
         params.SetBoundsMat(bounds)
-        if seed is not None:
-            params.randomSeed = seed
         conf_ids = rdDistGeom.EmbedMultipleConfs(ligand, 1, params)
+        if not conf_ids or ligand.GetNumConformers() == 0:
+            raise RuntimeError("RDKit EmbedMultipleConfs failed to generate conformers.")
     ligand = Chem.RemoveHs(ligand)
+    if ligand.GetNumConformers() == 0:
+        raise RuntimeError("No conformer available after removing hydrogens.")
     conf = ligand.GetConformer()
     lig_coords = conf.GetPositions()
     return ligand, lig_coords
@@ -700,7 +706,7 @@ def _run_mgd(
         use_rdkit_coords=True,
         radius=ds_cfg.lig_graph_radius,
     )
-    geometry_graph = get_geometry_graph_ring(lig_origin)
+    geometry_graph = get_geometry_graph_ring(lig)
 
     recs, recs_coords, c_alpha_coords, n_coords, c_coords = get_receptor_inference(
         p1_path
@@ -881,17 +887,25 @@ def main():
     if args.seeds is None:
         args.seeds = 40 if args.task.upper() == "PROTAC" else 1
 
-    # Resolve config/checkpoint
-    if args.config is None or args.checkpoint is None:
+    # Resolve config/checkpoint based on user intention:
+    # - If both overrides given: use them
+    # - Else if task is provided: auto-resolve for that task
+    # - Else: require both overrides
+    if args.config is not None and args.checkpoint is not None:
+        auto_config, auto_ckpt = args.config, args.checkpoint
+    elif args.task is not None:
         try:
             auto_config, auto_ckpt = _resolve_task_paths(args.task)
-        except Exception as e:
-            # If auto-detection fails and user supplied overrides, continue; else raise
-            if args.config is None or args.checkpoint is None:
-                raise
-            auto_config, auto_ckpt = args.config, args.checkpoint
+        except Exception:
+            raise RuntimeError(
+                "Failed to auto-resolve config/checkpoint for the given --task. "
+                "Please provide both --config and --checkpoint explicitly."
+            )
     else:
-        auto_config, auto_ckpt = args.config, args.checkpoint
+        raise ValueError(
+            "Either specify --task to auto-resolve config/checkpoint, "
+            "or provide both --config and --checkpoint."
+        )
 
     print(f"Loading model for task {args.task}...")
     cfg, model = _load_model(auto_config, auto_ckpt, args.device)
