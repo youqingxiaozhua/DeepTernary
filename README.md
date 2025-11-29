@@ -7,6 +7,8 @@ SE(3)-Equivariant Ternary Complex Prediction Towards Target Protein Degradation
 ---
 
 ## Update
+- **2025-11-29**: Release preprocessed data for training.
+- **2025-11-27**: Add a user-friendly prediction script: [predict.py](predict.py).
 - **2025-07-21**: Release all ternary pdb files and support automatic download of ideal ligands.
 - **2025-05-25**: Since the journal doesn't allow including thanks to anonymous referees, we would like to express our gratitude to the reviewer 3 for providing the RDKit codes to rigidly fix PROTAC chemical handles during conformational searches.
 
@@ -91,7 +93,7 @@ The model is defined in the following config file, please use the corresponding 
 | MGD    | [deepternary/configs/glue.py](deepternary/configs/glue.py)       |
 
 
-### Prediction
+### Evaluation
 
 To perform evaluation, follow these steps:
 1. Download the pre-trained checkpoint and PROTAC unbound structures from [this link](https://github.com/youqingxiaozhua/DeepTernary/releases/download/v1.0.0/output.zip).
@@ -114,27 +116,86 @@ python predict_cpu.py output/checkpoints/PROTAC
 ```
 Typically, the results for every test sample should be shown in 5 minues.
 
-For PROTAC prediction with different PROTACs, there is a simple API in `predict_btk.py`:
 
-```Python
+### Prediction
 
-data_dir = 'output/protac_new'
-name = '8QU8_A_F_WYL'
-cfg.save_dir = f'output/pred_{name}'
-predict_one_unbound(
-    name,
-    lig_path=f'{data_dir}/{name}/ligand.pdb',
-    p1_path=f'{data_dir}/{name}/unbound_protein1.pdb', p2_path=f'{data_dir}/{name}/unbound_protein2.pdb',
-    lig1_mask_path=f'{data_dir}/{name}/lig1_mask.pdb', lig2_mask_path=f'{data_dir}/{name}/unbound_lig2.pdb',
-    unbound_lig1_path=f'{data_dir}/{name}/unbound_lig1.pdb', unbound_lig2_path=f'{data_dir}/{name}/unbound_lig2.pdb',
-    cfg=cfg)
+- PROTAC example (unbound setting, multi-seed):
 
+```Bash
+python predict.py \
+    --task PROTAC \
+    --name 5T35-no-correct \
+    --lig output/protac22/5T35_H_E_759/ligand.pdb \
+    --p1 output/protac22/5T35_H_E_759/unbound_protein1.pdb \
+    --p2 output/protac22/5T35_H_E_759/unbound_protein2.pdb \
+    --unbound-lig1 output/protac22/5T35_H_E_759/unbound_lig1.pdb \
+    --unbound-lig2 output/protac22/5T35_H_E_759/unbound_lig2.pdb \
+    --lig1-mask output/protac22/5T35_H_E_759/unbound_lig1.pdb \
+    --lig2-mask output/protac22/5T35_H_E_759/unbound_lig2.pdb \
+    --outdir ./results/protac_case \
+    --seeds 40
 ```
 
-This will save the predicted ternary complex pdb file in the `cfg.save_dir` directory.
+- MGD example (bound setting, single seed):
+
+```Bash
+python predict.py \
+    --task MGD \
+    --name 6HR2-case \
+    --lig data/TernaryDB/pdbs/6HR2_F_E_FWZ/ligand.pdb \
+    --p1 data/TernaryDB/pdbs/6HR2_F_E_FWZ/protein1.pdb \
+    --p2 data/TernaryDB/pdbs/6HR2_F_E_FWZ/protein2.pdb \
+    --outdir ./results/mgd_case
+```
+
+- Arguments
+    - `--task`: "PROTAC" or "MGD".
+    - `--lig`: ligand file (`.pdb` or `.sdf`).
+    - `--p1`, `--p2`: protein PDBs.
+    - `--unbound-lig1`, `--unbound-lig2` (PROTAC): unbound anchor/warhead PDBs.
+    - `--lig1-mask`, `--lig2-mask` (PROTAC): mask molecules used to map PROTAC indices to anchor/warhead atoms. They can be a subset of the corresponding unbound ligs. This is required because sometimes RDKit can not find the matches between anchor/warhead and the given PROTAC. To generate them, just align `--unbound-lig1` and `--unbound-lig2` to the given `--lig`, make sure the corresponding atoms are very close.
+    - `--outdir`: directory to save outputs.
+    - `--seeds`: number of random conformers (default 40 for PROTAC, 1 for MGD).
+    - `--device`: `cuda` or `cpu` (defaults to CUDA if available).
+    - `--no-correct`: disable EquiBind-based ligand pose correction.
+
+- Outputs
+    - Per-seed predicted complex PDBs saved to `--outdir`, named like `complex_pred_<name>_<seed>.pdb`.
+    - A summary CSV `summary_<name>.csv` in `--outdir` listing `seed`, predicted protein2 RMSD surrogate (`pred_p2_rmsd`), a simple clash ratio, and the path to each complex PDB.
+
+- Notes on PROTAC matching
+    - The PROTAC anchor/warhead masks are first matched to the full PROTAC using RDKit substructure matching.
+    - If RDKit cannot find a full substructure match, the script falls back to a distance-based Hungarian assignment with atom-type penalties and logs a warning, e.g.:
+      - `[Warn] RDKit GetSubstructMatch failed ...; using distance-based matching`
+      - `[DistanceMatch] lig1: mean_dist=..., mismatches=.../...`
+
+The top-1 result is the one with the lowest predicted P2 RMSD in the summary CSV.
 
 ### Training
 
+
+#### Data Preparation
+
+To accelerate training, we have pre-generated 50 conformations per structure and cached the results. This skips the time-consuming steps of parsing PDB files, generating random conformations, and constructing graphs. For implementation details, please refer to [tools/data_preparation/preprocess.py](tools/data_preparation/preprocess.py).
+
+#### Download and Setup
+
+1. Download the preprocessed data, ideal ligands, and raw PDBs from [Google Drive](https://drive.google.com/drive/folders/1BHRINig7nQUvNc3uv5rp2e67EmATQew5?usp=sharing).
+
+2. Extract the files into data/TernaryDB so the directory structure matches the layout below.
+
+3. Note: If you choose a different directory, you must update the path configurations in [deepternary/models/path.py](deepternary/models/path.py).
+
+
+```
+data/TernaryDB
+├── preprocessed  # PREPROCESSED_PATH
+│   └──  pdb2311_merge  # extracted from preprocessed/pdb2311_merge.tar 
+├── ligand_ideal  # IDEAL_PATH, extracted from ligand_ideal.tar
+└── pdbs  # PDB_PATH, extracted from pdb2311_merge.tar.xz
+```
+
+#### Start Training
 For training with 2 GPUs, use the command below:
 
 ```Bash
